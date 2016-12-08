@@ -1,0 +1,44 @@
+{
+  "name": "event-publisher",
+  "version": "0.1.0",
+  "description": "A small package used to publish event to a data-hub",
+  "homepage": "",
+  "author": {
+    "name": "Iurie Marchitan",
+    "email": "iurie.marchitan@arnia.ro",
+    "url": ""
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "keywords": [
+    "event"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2015": "6.9.0",
+    "babel-register": "^6.9.0",
+    "cucumber-html-reporter": "^0.3.2",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-cucumber": "0.0.22",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-istanbul": "^1.0.0",
+    "gulp-line-ending-corrector": "^1.0.1",
+    "gulp-nsp": "^2.1.0",
+    "gulp-util": "^3.0.7"
+  },
+  "repository": "https://github.com/CollinsonGroup/collinson-datahub-client-nodejs",
+  "scripts": {
+    "test": "gulp",    
+    "prepublish": "gulp prepublish"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "circuit-breaker-js": "0.0.1",
+    "jsonfile": "^2.4.0"
+  }
+}

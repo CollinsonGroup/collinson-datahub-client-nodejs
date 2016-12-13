@@ -3,8 +3,8 @@
 
 var CircuitBreaker = require('circuit-breaker-js');
 
-var circuitBreakerService = function circuitBreakerService(settings) {
-    var breaker = new CircuitBreaker(settings);
+var circuitBreakerService = function circuitBreakerService(policy) {
+    var breaker = new CircuitBreaker(policy.settings);
 
     function execute(command) {
         return new Promise(function (resolve, reject) {
@@ -17,17 +17,16 @@ var circuitBreakerService = function circuitBreakerService(settings) {
                     reject(error);
                 });
             };
+
+            if (breaker.isOpen()) {
+                return reject(new Error('Circuit breaker is open'));
+            }
             breaker.run(commandHandler);
         });
     }
 
-    function isOpen() {
-        return breaker && breaker.isOpen();
-    }
-
     return {
-        execute: execute,
-        isOpen: isOpen
+        execute: execute
     };
 };
 

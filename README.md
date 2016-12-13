@@ -110,11 +110,6 @@ eventPublisherProxy().publish(eventMsg);
 
 ```
 
-## Tests
-
-```sh
-npm test
-```  
 ## License
 
 MIT

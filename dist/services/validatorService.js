@@ -1,11 +1,11 @@
 "use strict";
 
-var constants = require('./constants');
+var constants = require('../core/constants');
 
 var validatorService = {
 
     validateEvent: function validateEvent(event, policy) {
-        if (policy !== constants.validationPolicy.strict) {
+        if (policy && policy !== constants.validationPolicy.strict) {
             return;
         }
         if (!event.resourceVersion) {

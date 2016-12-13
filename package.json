@@ -25,20 +25,22 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.2",
     "gulp-cucumber": "0.0.22",
+    "gulp-deploy-git": "^0.5.3",
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^1.0.0",
     "gulp-line-ending-corrector": "^1.0.1",
     "gulp-nsp": "^2.1.0",
     "gulp-util": "^3.0.7"
   },
-  "repository": "https://github.com/CollinsonGroup/collinson-datahub-client-nodejs",
+  "repository": "https://iurie.marchitan@stash.collinsoncloud.com/stash/scm/sc/collinson_datahub_client_nodejs.git",
   "scripts": {
-    "test": "gulp",    
+    "test": "gulp",
     "prepublish": "gulp prepublish"
   },
   "license": "MIT",
   "dependencies": {
     "circuit-breaker-js": "0.0.1",
-    "jsonfile": "^2.4.0"
+    "jsonfile": "^2.4.0",
+    "node-uuid": "^1.4.7"
   }
 }

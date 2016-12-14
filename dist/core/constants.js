@@ -6,4 +6,5 @@ var constants = {
     lenient: 'LENIENT'
   }
 };
+
 module.exports = constants;

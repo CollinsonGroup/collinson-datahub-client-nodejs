@@ -12,7 +12,7 @@ Of course it will stop resending once the event is published with success.</p>
 ## Installation
 
 ```sh
-$ npm install event-publisher --save
+$ npm install https://github.com/CollinsonGroup/collinson-datahub-client-nodejs --save-dev
 ```
 
 ## Usage

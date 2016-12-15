@@ -6,13 +6,22 @@ var commandService = require('./commandService');
 var httpService = require('../core/httpService');
 
 var eventService = function eventService() {
+    var result = {
+        errors: [],
+        data: null
+    };
+
     function publish(eventData, options) {
         formatEvent(eventData);
-        validate(eventData, options);
-        return sendEvent(eventData, options).then(function (eventId) {
-            return eventId;
-        }, function () {
-            return 0;
+        formatOptions(options);
+        result.errors = validatorService.validate(eventData, options);
+        return sendEvent(eventData, options).then(function (data) {
+            result.data = data;
+            return result;
+        }, function (err) {
+            result.errors.push(err);
+            result.data = 0;
+            return result;
         });
     }
 
@@ -21,14 +30,12 @@ var eventService = function eventService() {
         eventData.createdDateTime = new Date().toISOString();
     }
 
-    function validate(eventJson, options) {
-        config.validationPolicy = options.validationPolicy || config.validationPolicy;
-        validatorService.validateEvent(eventJson, config.validationPolicy);
-        validatorService.validateDataHubOptions(options.datahub);
+    function formatOptions(options) {
+        options.retry = options.retry || config.retry;
+        options.validation = options.validation || config.validation;
     }
 
     function sendEvent(eventData, options) {
-        options.retryInterval = options.retryInterval || config.retryInterval;
         options.httpRequest = {
             data: JSON.stringify(eventData),
             path: '/api/events',

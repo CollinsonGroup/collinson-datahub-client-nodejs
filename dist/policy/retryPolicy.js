@@ -9,20 +9,21 @@ var retryPolicy = function retryPolicy() {
     var fileName = '';
     var config = {
         eventData: {},
-        options: {}
+        filePath: null,
+        delays: []
     };
 
     function onRetry() {
         if (retryCount === 0) {
             fileName = uuid.v4();
-            failedEventService.save(config.eventData, fileName, config.options.filePath);
+            failedEventService.save(config.eventData, fileName, config.filePath);
         }
         retryCount++;
     }
 
     function onSuccess() {
         if (fileName) {
-            failedEventService.delete(fileName, config.options.filePath);
+            failedEventService.delete(fileName, config.filePath);
         }
     }
 
@@ -34,11 +35,11 @@ var retryPolicy = function retryPolicy() {
         get: function get(options) {
             config.eventData = options.httpRequest.data;
             if (options.failedEvent && options.failedEvent.filePath) {
-                config.options.filePath = options.failedEvent.filePath;
+                config.filePath = options.failedEvent.filePath;
             }
-
+            config.delays = options.retry.interval;
             var policy = {
-                delays: options.retryInterval.slice(),
+                delays: config.delays.slice(),
                 handle: handle,
                 onRetry: onRetry,
                 onSuccess: onSuccess

@@ -3,7 +3,7 @@
 <p>In order to send an event, need to provide eventData and options.</p>
 <ul>
 <li>eventData - represent a json with metadata and payload</li>
-<li>options - define the host url,http protocol for data hub and retry interval</li>
+<li>options - define the host url,http protocol for data hub,retry interval and metadata validation mode</li>
 </ul>
 <p>Event is sent to Data Hub Api that redirects it to amazon kinesis. <br /> 
 In case event failed to publish, the event-publisher will retry to send it again. <br /> 
@@ -39,13 +39,25 @@ var options = {
 	// the npm package support retries in case an event failed to publish
 	// default interval is [1000,2000,4000] that represent the time in milliseconds.
 	// the package allow to ovveride the interval by setting a custom one
-	retryInterval:[1000,2000]  
-								
+	retry: {
+		interval: [1000, 2000]
+	}
+	// in case medatata fields should not be validated we can set validation strictMode to false. By default is set to true 
+	validation: {
+        strictMode: true
+    }
 }
 
-eventPublisher().publish(eventData,options);
-//Currently publish method returns a promise that gives the saved eventId. 
-//eventService().publish(eventJson, options).then(function(eventId){...});
+//Publish method returns a promise that gives an result {data:integer, errors:string[]}
+//If there are any errors we can log them. Data is the saved event id.
+eventPublisher().publish(eventData,options).then(function(result){
+	if(result.errors.length > 0)
+	{
+		//write into log files
+	}
+	return result.data;
+});
+ 
 ```
 
 <p>To avoid sending event metadata and options every time need to send an event, a proxy module can be defined.<br />
@@ -67,7 +79,14 @@ var config = {
 			host: 'localhost.datahub.local',
 			protocol: 'http'
 		},
-		retryInterval:[1000,2000,4000,8000]
+		// ovveride retry with custom interval if required
+		retry: {
+			interval: [1000, 2000, 4000]
+		},
+		// ovveride validation strict mode if required
+		validation: {
+        	strictMode: false
+    	}
 	}
 };
 

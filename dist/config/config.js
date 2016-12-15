@@ -8,7 +8,11 @@ var config = {
         "errorThreshold": 50,
         "volumeThreshold": 5
     },
-    retryInterval: [1000, 2000],
-    validationPolicy: 'STRICT'
+    retry: {
+        interval: [1000, 2000, 4000]
+    },
+    validation: {
+        strictMode: true
+    }
 };
 module.exports = config;

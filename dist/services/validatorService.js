@@ -1,50 +1,66 @@
 "use strict";
 
-var constants = require('../core/constants');
-
 var validatorService = {
 
-    validateEvent: function validateEvent(event, policy) {
-        if (policy && policy !== constants.validationPolicy.strict) {
-            return;
-        }
+    validate: function validate(eventData, options) {
+        this.validateDataHub(options.datahub);
+        this.validateRetryOptions(options.retry);
+        return this.validateEvent(eventData, options.validation);
+    },
+
+    validateEvent: function validateEvent(event, validation) {
+        var errors = [];
         if (!event.resourceVersion) {
-            throw new Error('Resource Version is required!');
+            errors.push('Resource Version is required!');
         }
         if (!event.source) {
-            throw new Error('Source is required!');
+            errors.push('Source is required!');
         }
         if (!event.tenant) {
-            throw new Error('Tenant is required!');
+            errors.push('Tenant is required!');
         }
         if (!event.messageType) {
-            throw new Error('MessageType is required!');
+            errors.push('MessageType is required!');
         }
-        this.validatePayload(event.payload);
+        this.validatePayload(event.payload, errors);
+        if (errors.length > 0 && validation.strictMode) {
+            throw new Error(errors.join('\n'));
+        }
+        return errors;
     },
 
-    validateDataHubOptions: function validateDataHubOptions(options) {
-        if (!options.protocol) {
-            throw new Error('Http protocol is missing!');
+    validateDataHub: function validateDataHub(datahub) {
+        var errors = [];
+        if (!datahub.protocol) {
+            errors.push('Http protocol is missing!');
         }
-        if (!options.host) {
-            throw new Error('Data hub host is missing!');
+        if (!datahub.host) {
+            errors.push('Data hub host is missing!');
         }
-        if (options.protocol !== 'http' && options.protocol !== 'https') {
-            throw new Error('Protocol possible value are : http or https!');
+        if (datahub.protocol !== 'http' && datahub.protocol !== 'https') {
+            errors.push('Protocol possible value are : http or https!');
+        }
+        if (errors.length > 0) {
+            throw new Error(errors.join('\n'));
         }
     },
 
-    validatePayload: function validatePayload(jsonString) {
-        if (jsonString.startsWith("{") && jsonString.endsWith("}") || jsonString.startsWith("[") && jsonString.endsWith("]")) {
+    validateRetryOptions: function validateRetryOptions(retry) {
+        if (!Array.isArray(retry.interval)) {
+            throw new Error('Retry interval is not a valid array');
+        }
+    },
+
+    validatePayload: function validatePayload(payload, errors) {
+        if (!payload || payload.startsWith("{") && payload.endsWith("}") || payload.startsWith("[") && payload.endsWith("]")) {
             try {
-                JSON.parse(jsonString);
-                return;
+                JSON.parse(payload);
             } catch (err) {
-                throw new Error('Payload is not a valid json object!');
+                errors.push('Payload is not a valid json object!');
             }
+        } else {
+            errors.push('Payload is not a valid json object!');
         }
-        throw new Error('Payload is not a valid json object!');
     }
 };
 

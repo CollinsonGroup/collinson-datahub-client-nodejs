@@ -19,7 +19,7 @@ var eventService = function eventService() {
             result.data = data;
             return result;
         }, function (err) {
-            result.errors.push(err);
+            result.errors.push(err.message);
             result.data = 0;
             return result;
         });

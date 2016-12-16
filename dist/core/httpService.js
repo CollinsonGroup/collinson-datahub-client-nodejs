@@ -8,7 +8,7 @@ var httpService = {
       var lib = options.protocol.startsWith('https') ? https : http;
       var request = lib.request(options, function (response) {
         if (response.statusCode !== 200) {
-          reject(new Error('Message publish failed, status code:' + response.statusCode + ' status message:' + response.statusMessage));
+          reject(new Error('Message publish failed with status code: ' + response.statusCode + ' and status message: ' + response.statusMessage));
         }
         var body = [];
         response.on('data', function (chunk) {
@@ -20,7 +20,7 @@ var httpService = {
       });
 
       request.on('error', function (err) {
-        return reject(new Error('Message publish failed, error code:' + err.code + ' hostname:' + err.hostname));
+        return reject(new Error('Message publish failed with error code: ' + err.code));
       });
 
       request.end(options.json);

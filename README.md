@@ -20,10 +20,10 @@ $ npm install https://github.com/CollinsonGroup/collinson-datahub-client-nodejs 
 ```js
 var eventPublisher = require('event-publisher');
 var eventData =  {
-	resourceVersion: "1", // event version number
-	source: "offer.api", // name of client that is using the package
-	tenant: "1", // tenant id
-	messageType: "order", //type of event
+	resourceVersion: "1", // The label of the specific version of metadata that the service is sending in it's messages.
+	source: "offer.api", // The name of the originating service that is sending the event message.
+	tenant: "1", // The name of the client that the service created the event for.
+	messageType: "order", //  The name of the event that the message holds information about.
 	payload: {       // event data
 		amount:100,
 		count:3,

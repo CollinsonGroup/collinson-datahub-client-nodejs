@@ -5,6 +5,7 @@ var validatorService = {
     validate: function validate(eventData, options) {
         this.validateDataHub(options.datahub);
         this.validateRetryOptions(options.retry);
+        this.validateCircuitBreakerOptions(options.circuitBreaker);
         return this.validateEvent(eventData, options.validation);
     },
 
@@ -51,6 +52,28 @@ var validatorService = {
         }
     },
 
+    validateCircuitBreakerOptions: function validateCircuitBreakerOptions(circuitBreaker) {
+        var errors = [];
+        if (this.isNotANumber(circuitBreaker.windowDuration)) {
+            errors.push('Circuit Breaker windowDuration is not a valid number');
+        }
+        if (this.isNotANumber(circuitBreaker.numBuckets)) {
+            errors.push('Circuit Breaker numBuckets is not a valid number');
+        }
+        if (this.isNotANumber(circuitBreaker.timeoutDuration)) {
+            errors.push('Circuit Breaker timeoutDuration is not a valid number');
+        }
+        if (this.isNotANumber(circuitBreaker.errorThreshold)) {
+            errors.push('Circuit Breaker errorThreshold is not a valid number');
+        }
+        if (this.isNotANumber(circuitBreaker.volumeThreshold)) {
+            errors.push('Circuit Breaker volumeThreshold is not a valid number');
+        }
+        if (errors.length > 0) {
+            throw new Error(errors.join('\n'));
+        }
+    },
+
     validatePayload: function validatePayload(payload, errors) {
         if (!payload || payload.startsWith("{") && payload.endsWith("}") || payload.startsWith("[") && payload.endsWith("]")) {
             try {
@@ -61,6 +84,10 @@ var validatorService = {
         } else {
             errors.push('Payload is not a valid json object!');
         }
+    },
+
+    isNotANumber: function isNotANumber(number) {
+        return !number || isNaN(number);
     }
 };
 

@@ -33,6 +33,7 @@ var eventService = function eventService() {
     function formatOptions(options) {
         options.retry = options.retry || config.retry;
         options.validation = options.validation || config.validation;
+        options.circuitBreaker = options.circuitBreaker || config.circuitBreaker;
     }
 
     function sendEvent(eventData, options) {
@@ -41,7 +42,7 @@ var eventService = function eventService() {
             path: '/api/events',
             method: 'POST'
         };
-        return commandService().executeCommand(httpService.post, options);
+        return commandService(options).executeCommand(httpService.post);
     }
 
     return {

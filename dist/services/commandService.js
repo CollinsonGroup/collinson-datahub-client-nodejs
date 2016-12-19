@@ -1,23 +1,25 @@
 "use strict";
 
-var circuitPolicy = require('../policy/circuitPolicy');
 var retryPolicy = require('../policy/retryPolicy');
-var circuitBreakerService = require('../core/circuitBreakerService')(circuitPolicy);
 var retryService = require('../core/retryService');
+var circuitBreakerService = void 0;
 
-var commandService = function commandService() {
-
-    function executeCommand(action, options) {
-        var command = getCommand(action, options);
+var commandService = function commandService(options) {
+    var commandOptions = options;
+    if (!circuitBreakerService) {
+        circuitBreakerService = require('../core/circuitBreakerService')(commandOptions.circuitBreaker);
+    }
+    function executeCommand(action) {
+        var command = getCommand(action);
         command = decorateWithCircuitBreaker(command);
         command = decorateWithRetry(options, command);
         return command();
     }
 
-    function getCommand(action, options) {
-        var commandOptions = getCommandOptions(options);
+    function getCommand(action) {
+        var actionOptions = getActionOptions();
         return function () {
-            return action(commandOptions);
+            return action(actionOptions);
         };
     }
 
@@ -34,16 +36,16 @@ var commandService = function commandService() {
         };
     }
 
-    function getCommandOptions(options) {
+    function getActionOptions() {
         return {
-            protocol: options.datahub.protocol + ':',
-            host: options.datahub.host,
-            json: options.httpRequest.data,
-            path: options.httpRequest.path,
-            method: options.httpRequest.method,
+            protocol: commandOptions.datahub.protocol + ':',
+            host: commandOptions.datahub.host,
+            json: commandOptions.httpRequest.data,
+            path: commandOptions.httpRequest.path,
+            method: commandOptions.httpRequest.method,
             headers: {
                 "Content-Type": "application/json",
-                'Content-Length': Buffer.byteLength(options.httpRequest.data)
+                'Content-Length': Buffer.byteLength(commandOptions.httpRequest.data)
             }
         };
     }

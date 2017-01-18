@@ -12,7 +12,7 @@ var eventService = function eventService() {
     };
 
     function publish(eventData, options) {
-        formatEvent(eventData);
+        eventData = getFormattedEvent(eventData);
         formatOptions(options);
         result.errors = validatorService.validate(eventData, options);
         return sendEvent(eventData, options).then(function (data) {
@@ -25,9 +25,17 @@ var eventService = function eventService() {
         });
     }
 
-    function formatEvent(eventData) {
-        eventData.payload = JSON.stringify(eventData.payload);
-        eventData.createdDateTime = new Date().toISOString();
+    function getFormattedEvent(eventData) {
+        return {
+            metadata: {
+                resourceVersion: eventData.resourceVersion,
+                source: eventData.source,
+                tenant: eventData.tenant,
+                createdDateTime: new Date().toISOString(),
+                messageType: eventData.messageType
+            },
+            payload: eventData.payload
+        };
     }
 
     function formatOptions(options) {

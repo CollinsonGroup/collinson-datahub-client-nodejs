@@ -2,7 +2,7 @@
 
 var config = {
     circuitBreaker: {
-        windowDuration: 5000,
+        windowDuration: 9000,
         numBuckets: 5,
         timeoutDuration: 10000,
         errorThreshold: 50,

@@ -19,7 +19,7 @@ var circuitBreakerService = function circuitBreakerService(policy) {
             };
 
             if (breaker.isOpen()) {
-                return reject(new Error('Circuit breaker is open'));
+                return reject(new Error('Failed to publish message. Circuit breaker is open.'));
             }
             breaker.run(commandHandler);
         });

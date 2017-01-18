@@ -11,17 +11,21 @@ var validatorService = {
 
     validateEvent: function validateEvent(event, validation) {
         var errors = [];
-        if (!event.resourceVersion) {
-            errors.push('Resource Version is required!');
-        }
-        if (!event.source) {
-            errors.push('Source is required!');
-        }
-        if (!event.tenant) {
-            errors.push('Tenant is required!');
-        }
-        if (!event.messageType) {
-            errors.push('MessageType is required!');
+        if (!event.metadata) {
+            errors.push('Metadata is required!');
+        } else {
+            if (!event.metadata.resourceVersion) {
+                errors.push('Resource Version is required!');
+            }
+            if (!event.metadata.source) {
+                errors.push('Source is required!');
+            }
+            if (!event.metadata.tenant) {
+                errors.push('Tenant is required!');
+            }
+            if (!event.metadata.messageType) {
+                errors.push('MessageType is required!');
+            }
         }
         this.validatePayload(event.payload, errors);
         if (errors.length > 0 && validation.strictMode) {
@@ -75,14 +79,9 @@ var validatorService = {
     },
 
     validatePayload: function validatePayload(payload, errors) {
-        if (!payload || payload.startsWith("{") && payload.endsWith("}") || payload.startsWith("[") && payload.endsWith("]")) {
-            try {
-                JSON.parse(payload);
-            } catch (err) {
-                errors.push('Payload is not a valid json object!');
-            }
-        } else {
-            errors.push('Payload is not a valid json object!');
+        // Note: deliberate type coercion for undefined == null
+        if (payload == null || payload === "") {
+            errors.push('Payload is not a valid object!');
         }
     },
 

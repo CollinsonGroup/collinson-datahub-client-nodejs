@@ -9,6 +9,10 @@
 In case event failed to publish, the event-publisher will retry to send it again. <br /> 
 By default retry interval is [1000,2000,4000]. That means event will be republished after 1,2 and 4 seconds.<br /> 
 Of course it will stop resending once the event is published with success.</p>
+
+<p> Besides the retry mechanism, the package uses a circuit breaker to avoid sending messages <br/>
+when data hub api is down for a long period of time. The following implementation is used https://github.com/yammer/circuit-breaker-js<br />
+Please check this short video that explains how circuit breaker is working https://www.youtube.com/watch?v=DOocsQj4M9o </p>
 ## Installation
 
 ```sh
@@ -46,6 +50,14 @@ var options = {
 	validation: {
         strictMode: true
     }
+	// we may define ovveride default values for circuit breaker
+	 circuitBreaker: {
+        windowDuration: 5000,
+        numBuckets: 5,
+        timeoutDuration: 10000,
+        errorThreshold: 50,
+        volumeThreshold: 5
+    },
 }
 
 //Publish method returns a promise that gives an result {data:integer, errors:string[]}

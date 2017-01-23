@@ -1,29 +1,29 @@
 "use strict";
 
-var http = require('http');
-var https = require('https');
+var request = require("request");
+
+var statusErrors = {
+  401: "EUNAUTHORISED",
+  404: "ENOTFOUND"
+};
+
 var httpService = {
   post: function post(options) {
     return new Promise(function (resolve, reject) {
-      var lib = options.protocol.startsWith('https') ? https : http;
-      var request = lib.request(options, function (response) {
-        if (response.statusCode !== 200) {
-          reject(new Error('Failed to publish message. Status code: ' + response.statusCode + ' with status message: ' + response.statusMessage));
+
+      request(options, function (err, res, body) {
+
+        if (res && res.statusCode !== 200) {
+          var errorMessage = statusErrors[res.statusCode] || response.statusMessage;
+          reject(new Error('Failed to publish message. Status code: ' + res.statusCode + ' with status message: ' + errorMessage));
         }
-        var body = [];
-        response.on('data', function (chunk) {
-          return body.push(chunk);
-        });
-        response.on('end', function () {
-          return resolve(body.join(''));
-        });
-      });
 
-      request.on('error', function (err) {
-        return reject(new Error('Failed to publish message. Error code: ' + err.code));
-      });
+        if (err) {
+          reject(new Error('Failed to publish message. Error code: ' + err.code));
+        }
 
-      request.end(options.json);
+        resolve(body);
+      });
     });
   }
 };

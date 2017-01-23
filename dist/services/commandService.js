@@ -37,16 +37,20 @@ var commandService = function commandService(options) {
     }
 
     function getActionOptions() {
+        var headers = {
+            "Content-Type": "application/json",
+            "Content-Length": Buffer.byteLength(commandOptions.httpRequest.data)
+        };
+
+        if (commandOptions.datahub.apiKey) {
+            headers["Authorization"] = "Basic " + commandOptions.datahub.apiKey;
+        }
+
         return {
-            protocol: commandOptions.datahub.protocol + ':',
-            host: commandOptions.datahub.host,
-            json: commandOptions.httpRequest.data,
-            path: commandOptions.httpRequest.path,
+            uri: commandOptions.datahub.protocol + '://' + commandOptions.datahub.host + commandOptions.httpRequest.path,
+            body: commandOptions.httpRequest.data,
             method: commandOptions.httpRequest.method,
-            headers: {
-                "Content-Type": "application/json",
-                'Content-Length': Buffer.byteLength(commandOptions.httpRequest.data)
-            }
+            headers: headers
         };
     }
 

@@ -42,6 +42,7 @@
   "dependencies": {
     "circuit-breaker-js": "0.0.1",
     "jsonfile": "^2.4.0",
-    "node-uuid": "^1.4.7"
+    "node-uuid": "^1.4.7",
+    "request": "^2.79.0"
   }
 }

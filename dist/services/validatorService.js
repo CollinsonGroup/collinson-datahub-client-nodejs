@@ -11,23 +11,23 @@ var validatorService = {
 
     validateEvent: function validateEvent(event, validation) {
         var errors = [];
-        if (!event.metadata) {
+        if (!event.Metadata) {
             errors.push('Metadata is required!');
         } else {
-            if (!event.metadata.resourceVersion) {
+            if (!event.Metadata.version) {
                 errors.push('Resource Version is required!');
             }
-            if (!event.metadata.source) {
+            if (!event.Metadata.source) {
                 errors.push('Source is required!');
             }
-            if (!event.metadata.tenant) {
+            if (!event.Metadata.tenant) {
                 errors.push('Tenant is required!');
             }
-            if (!event.metadata.messageType) {
+            if (!event.Metadata.message_type) {
                 errors.push('MessageType is required!');
             }
         }
-        this.validatePayload(event.payload, errors);
+        this.validatePayload(event.Payload, errors);
         if (errors.length > 0 && validation.strictMode) {
             throw new Error(errors.join('\n'));
         }

@@ -27,14 +27,14 @@ var eventService = function eventService() {
 
     function getFormattedEvent(eventData) {
         return {
-            metadata: {
-                resourceVersion: eventData.resourceVersion,
+            Metadata: {
+                version: eventData.resourceVersion,
                 source: eventData.source,
                 tenant: eventData.tenant,
-                createdDateTime: new Date().toISOString(),
-                messageType: eventData.messageType
+                created_date_time: new Date().toISOString(),
+                message_type: eventData.messageType
             },
-            payload: eventData.payload
+            Payload: eventData.payload
         };
     }
 

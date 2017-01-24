@@ -1,6 +1,6 @@
 {
   "name": "event-publisher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A small package used to publish event to a data-hub",
   "homepage": "",
   "author": {

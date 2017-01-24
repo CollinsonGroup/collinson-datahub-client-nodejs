@@ -14,7 +14,7 @@ var httpService = {
       request(options, function (err, res, body) {
 
         if (res && res.statusCode !== 200) {
-          var errorMessage = statusErrors[res.statusCode] || response.statusMessage;
+          var errorMessage = statusErrors[res.statusCode] || res.statusMessage;
           reject(new Error('Failed to publish message. Status code: ' + res.statusCode + ' with status message: ' + errorMessage));
         }
 

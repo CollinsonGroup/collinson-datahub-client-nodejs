@@ -3,7 +3,7 @@
 <p>In order to send an event, need to provide eventData and options.</p>
 <ul>
 <li>eventData - represent a json with metadata and payload</li>
-<li>options - define the host url,http protocol for data hub,retry interval and metadata validation mode</li>
+<li>options - define the host url,http protocol for data hub,API key if required,retry interval and metadata validation mode</li>
 </ul>
 <p>Event is sent to Data Hub Api that redirects it to amazon kinesis. <br /> 
 In case event failed to publish, the event-publisher will retry to send it again. <br /> 
@@ -38,7 +38,8 @@ var eventData =  {
 var options = {
 	datahub: {
 		host: 'qa.datahub-api.latitude-dev.local', // the data hub host
-		protocol: 'http' //possible value http and https
+		protocol: 'http', //possible value http and https
+		apiKey: 'dGVzdEFwaUtleQ==' // API key if required by data hub install (optional)
 	},
 	// the npm package support retries in case an event failed to publish
 	// default interval is [1000,2000,4000] that represent the time in milliseconds.

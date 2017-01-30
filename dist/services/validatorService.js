@@ -17,6 +17,9 @@ var validatorService = {
             if (!event.Metadata.version) {
                 errors.push('Resource Version is required!');
             }
+            if (typeof event.Metadata.version != "number" || !Number.isInteger(event.Metadata.version)) {
+                errors.push("Resource Version must be an integer!");
+            }
             if (!event.Metadata.source) {
                 errors.push('Source is required!');
             }

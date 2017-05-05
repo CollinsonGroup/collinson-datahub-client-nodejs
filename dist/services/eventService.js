@@ -4,6 +4,7 @@ var config = require('../config/config');
 var validatorService = require('./validatorService');
 var commandService = require('./commandService');
 var httpService = require('../core/httpService');
+var uuid = require('node-uuid');
 
 var eventService = function eventService() {
     var result = {
@@ -28,6 +29,7 @@ var eventService = function eventService() {
     function getFormattedEvent(eventData) {
         return {
             Metadata: {
+                guid: uuid.v4(),
                 version: eventData.resourceVersion,
                 source: eventData.source,
                 tenant: eventData.tenant,
